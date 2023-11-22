@@ -27,8 +27,8 @@ const LoginPage = () => {
                                 <form>
                                     {/*Sign in section*/}
                                     <div className="flex flex-row items-center justify-center lg:justify-start">
-                                        <p className="mb-0 mr-4 text-lg">
-                                            Sign in
+                                        <p className="mb-0 mr-4 text-xl text-teal-600 font-bold">
+                                            SIGN IN
                                         </p>
                                     </div>
                                     {/* Separator between social media sign in and email/password sign in */}
