@@ -30,7 +30,7 @@ const ProductDetailPage = () => {
                 ...product,
                 productListRelated: productListRelated.filter(
                     (similarProduct: Product) =>
-                        similarProduct.id !== product.id
+                        similarProduct._id !== product.id
                 ),
             });
             // console.log({ product, productListRelated });
@@ -81,8 +81,7 @@ const ProductDetailPage = () => {
                                     {product?.title}
                                 </h1>
                                 <h2 className="text-sm title-font text-gray-500 tracking-widest pt-3">
-                                    Ratings: {product?.rating.rate} (
-                                    {product?.rating.count} reviews)
+                                    Ratings: {product?.rate}
                                 </h2>
                                 <p className="leading-relaxed pt-3">
                                     {product?.description}

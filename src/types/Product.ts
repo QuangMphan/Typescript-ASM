@@ -1,14 +1,20 @@
-type ProductRating = {
-    rate: number;
-    count: number;
-};
+import { Category } from './Category';
 
 export type Product = {
-    id: number;
+    _id: string;
     title: string;
-    price: number;
-    description: string;
-    category: string;
     image: string;
-    rating: ProductRating;
+    category: Category;
+    description: string;
+    price: number;
+    rate: number;
+};
+
+export type ProductFormParams = {
+    title: string;
+    image: string;
+    category: string;
+    description: string;
+    price: number;
+    rate: number;
 };

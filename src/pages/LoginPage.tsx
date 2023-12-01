@@ -1,16 +1,54 @@
-import Header from '../components/elements/Header';
-import Footer from '../components/elements/Footer';
 // Initialization for ES Users
-import { Input, Ripple, initTE } from 'tw-elements';
+// import { Input, Ripple, initTE } from 'tw-elements';
+import axios from 'axios';
+import { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { ToastContainer, toast } from 'react-toastify';
 
-initTE({ Input, Ripple });
+// initTE({ Input, Ripple });
+
+type AccountInfo = {
+    email: string;
+    password: string;
+};
 
 const LoginPage = () => {
-    return (
-        <div>
-            <Header />
+    const navigate = useNavigate();
 
-            <div className="mx-auto max-w-screen-xl px-4 sm:px-6 lg:px-8">
+    const [accountInfo, setAccountInfo] = useState<AccountInfo>({
+        email: '',
+        password: '',
+    });
+
+    useEffect(() => {
+        const token = localStorage.getItem('token');
+        if (token) navigate('/admin/products');
+    }, []);
+
+    const handleChangeForm = (event: React.ChangeEvent<HTMLInputElement>) => {
+        setAccountInfo({
+            ...accountInfo,
+            [event.target.name]: event.target.value,
+        });
+    };
+
+    const handleSubmitForm = async (event: React.SyntheticEvent) => {
+        event.preventDefault();
+        // validate show error
+        try {
+            const { data } = await axios.post('/auth/login', accountInfo);
+            toast.success('Login Successfull!');
+            localStorage.setItem('token', data.token);
+            navigate('/admin/products');
+        } catch (error) {
+            toast.error('Login Failed! - ' + error);
+            console.log(error);
+        }
+    };
+
+    return (
+        <div className="pt-[150px]">
+            <div className="m-auto max-w-screen-xl px-4 sm:px-6 lg:px-8">
                 <section className="py-6">
                     <div>
                         {/* Left column container with background*/}
@@ -24,55 +62,50 @@ const LoginPage = () => {
                             </div>
                             {/* Right column container */}
                             <div className="mb-12 md:mb-0 md:w-8/12 lg:w-5/12 xl:w-5/12">
-                                <form>
+                                <form onSubmit={handleSubmitForm}>
                                     {/*Sign in section*/}
                                     <div className="flex flex-row items-center justify-center lg:justify-start">
                                         <p className="mb-0 mr-4 text-xl text-teal-600 font-bold">
                                             SIGN IN
                                         </p>
                                     </div>
-                                    {/* Separator between social media sign in and email/password sign in */}
-                                    <div className="my-4 flex items-center before:mt-0.5 before:flex-1 before:border-t before:border-neutral-300 after:mt-0.5 after:flex-1 after:border-t after:border-neutral-300">
-                                        <p className="mx-4 mb-0 text-center font-semibold dark:text-white">
-                                            Or
-                                        </p>
-                                    </div>
-                                    {/* Email input */}
-                                    <div
-                                        className="relative mb-6"
-                                        data-te-input-wrapper-init=""
-                                    >
-                                        <input
-                                            type="text"
-                                            className="peer block min-h-[auto] w-full rounded border-0 bg-transparent px-3 py-[0.32rem] leading-[2.15] outline-none transition-all duration-200 ease-linear focus:placeholder:opacity-100 data-[te-input-state-active]:placeholder:opacity-100 motion-reduce:transition-none dark:text-black dark:placeholder:text-black [&:not([data-te-input-placeholder-active])]:placeholder:opacity-0"
-                                            id="exampleFormControlInput2"
-                                            placeholder="Email address"
-                                        />
+
+                                    <div>
                                         <label
-                                            htmlFor="exampleFormControlInput2"
-                                            className="pointer-events-none absolute left-3 top-0 mb-0 max-w-[90%] origin-[0_0] truncate pt-[0.37rem] leading-[2.15] text-black transition-all duration-200 ease-out peer-focus:-translate-y-[1.15rem] peer-focus:scale-[0.8] peer-focus:text-primary peer-data-[te-input-state-active]:-translate-y-[1.15rem] peer-data-[te-input-state-active]:scale-[0.8] motion-reduce:transition-none dark:text-black dark:peer-focus:text-primary"
+                                            htmlFor="email"
+                                            className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
                                         >
-                                            Email address
+                                            Your email
                                         </label>
-                                    </div>
-                                    {/* Password input */}
-                                    <div
-                                        className="relative mb-6"
-                                        data-te-input-wrapper-init=""
-                                    >
                                         <input
-                                            type="password"
-                                            className="peer block min-h-[auto] w-full rounded border-0 bg-transparent px-3 py-[0.32rem] leading-[2.15] outline-none transition-all duration-200 ease-linear focus:placeholder:opacity-100 data-[te-input-state-active]:placeholder:opacity-100 motion-reduce:transition-none dark:text-black dark:placeholder:text-black [&:not([data-te-input-placeholder-active])]:placeholder:opacity-0"
-                                            id="exampleFormControlInput22"
-                                            placeholder="Password"
+                                            value={accountInfo.email}
+                                            onChange={handleChangeForm}
+                                            type="email"
+                                            name="email"
+                                            id="email"
+                                            className="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5"
+                                            placeholder="name@company.com"
                                         />
+                                    </div>
+
+                                    <div>
                                         <label
-                                            htmlFor="exampleFormControlInput22"
-                                            className="pointer-events-none absolute left-3 top-0 mb-0 max-w-[90%] origin-[0_0] truncate pt-[0.37rem] leading-[2.15] text-black transition-all duration-200 ease-out peer-focus:-translate-y-[1.15rem] peer-focus:scale-[0.8] peer-focus:text-primary peer-data-[te-input-state-active]:-translate-y-[1.15rem] peer-data-[te-input-state-active]:scale-[0.8] motion-reduce:transition-none dark:text-black dark:peer-focus:text-primary"
+                                            htmlFor="password"
+                                            className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
                                         >
                                             Password
                                         </label>
+                                        <input
+                                            value={accountInfo.password}
+                                            onChange={handleChangeForm}
+                                            type="password"
+                                            name="password"
+                                            id="password"
+                                            placeholder="••••••••"
+                                            className="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5"
+                                        />
                                     </div>
+
                                     {/* <div className="mb-6 flex items-center justify-between">
                                         <div className="mb-[0.125rem] block min-h-[1.5rem] pl-[1.5rem]">
                                             <input
@@ -91,9 +124,9 @@ const LoginPage = () => {
                                         <a href="#!">Forgot password?</a>
                                     </div> */}
                                     {/* Login button */}
-                                    <div className="text-center lg:text-left">
+                                    <div className="text-center mt-5 lg:text-left">
                                         <button
-                                            type="button"
+                                            type="submit"
                                             className="inline-block bg-primary pb-2.5 pt-3 rounded-lg uppercase leading-normalrounded-md bg-teal-600 px-5 py-2.5 text-sm font-medium text-white shadow"
                                             data-te-ripple-init=""
                                             data-te-ripple-color="light"
@@ -118,7 +151,7 @@ const LoginPage = () => {
                 </section>
             </div>
 
-            <Footer />
+            <ToastContainer />
         </div>
     );
 };

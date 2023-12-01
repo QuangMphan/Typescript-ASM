@@ -7,10 +7,8 @@ const HomePage = () => {
     const [productList, setProductList] = useState<Product[]>([]);
 
     const fetchProducts = async () => {
-        const { data: products } = await axios.get(
-            'https://fakestoreapi.com/products'
-        );
-        setProductList(products);
+        const { data } = await axios.get('/');
+        setProductList(data);
     };
 
     useEffect(() => {
